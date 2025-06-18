@@ -15,8 +15,8 @@ router.get("/pagamentos", (req, res) => {
             CONCAT('R$ ', REPLACE(REPLACE(REPLACE(FORMAT(pagamentos.valor, 2), '.', '|'), ',', '.'), '|', ',')) AS valor,
             DATE_FORMAT(STR_TO_DATE(pagamentos.ultimoPagamento, '%Y-%m-%d'), '%d/%m/%Y') AS ultimoPagamento,
             DATE_FORMAT(STR_TO_DATE(clients.vencimento, '%Y-%m-%d'), '%d/%m/%Y') AS vencimento 
-     FROM clients 
-     LEFT JOIN pagamentos ON pagamentos.id_client = clients.id`, 
+     FROM pagamentos 
+     LEFT JOIN clients ON pagamentos.id_client = clients.id`, 
     res
   );
 });
@@ -30,11 +30,11 @@ router.post("/pagamentos/", (req, res) => {
   let vencimentoString;
 
   vencimento = addDays(new Date(), valor >= 1000 ? 365 : 30);
-  vencimentoString = vencimento.toISOString().slice(0, 10);
+  vencimentoString = vencimento.toISOString().slice(0, 10);  
 
   execSQLQuery(
     `INSERT INTO pagamentos(valor, ultimoPagamento, id_client) VALUES (${valor}, '${new Date().toISOString().slice(0, 10)}', ${id_cliente});` +
-      `UPDATE clients SET ultimoPagamento = '${vencimentoString}' where id= ${id_cliente};`,
+      `UPDATE clients SET vencimento = '${vencimentoString}' where id= ${id_cliente};`,
     res
   );
 });

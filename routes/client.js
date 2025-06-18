@@ -42,10 +42,5 @@ router.delete("/clients/:id?", (req, res) => {
   execSQLQuery(`UPDATE clients SET ativo="${flag}" WHERE ID = ${id}`, res);
 });
 
-router.get("/:id?", (req, res, next) => {
-  let filter = "";
-  if (req.params.id) filter = " WHERE ID= " + parseInt(req.params.id);
-  execSQLQuery("SELECT * FROM clients" + filter, res);
-});
 
 module.exports = router;
