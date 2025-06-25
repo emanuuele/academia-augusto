@@ -11,11 +11,7 @@ server.use(bodyParser.urlencoded({ extended: true }));
 
 server.use(express.json())
 
-const corsOptions = {
-  origin: "https://front-academia-augusto.vercel.app", // Altere para o domínio do seu frontend
-};
-
-server.use(cors(corsOptions));
+server.use(cors());
 
 // Remova o middleware manual de CORS daqui
 
