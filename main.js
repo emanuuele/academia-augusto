@@ -12,7 +12,7 @@ server.use(bodyParser.urlencoded({ extended: true }));
 server.use(express.json())
 
 const corsOptions = {
-  origin: "http://localhost:3001", // Altere para o domínio do seu frontend
+  origin: "*", // Altere para o domínio do seu frontend
 };
 
 server.use(cors(corsOptions));
