@@ -1,11 +1,7 @@
 const { Pool } = require('pg');
 const createTables = require("./create-table");
 const pool = new Pool({
-        user: 'postgres',
-        host: 'localhost',
-        database: 'academia_db',
-        password: process.env.DB_PASSWORD,
-        port: 5432, 
+  connectionString: process.env.DATABASE_URL,
 });
 
 function execSQLQuery(sqlQry, res) {
