@@ -12,9 +12,9 @@ router.get("/pagamentos", (req, res) => {
   execSQLQuery(
     `SELECT pagamentos.id, 
             clients.nome, 
-            CONCAT('R$ ', REPLACE(REPLACE(REPLACE(FORMAT(pagamentos.valor, 2), '.', '|'), ',', '.'), '|', ',')) AS valor,
-            DATE_FORMAT(STR_TO_DATE(pagamentos.ultimoPagamento, '%Y-%m-%d'), '%d/%m/%Y') AS ultimoPagamento,
-            DATE_FORMAT(STR_TO_DATE(clients.vencimento, '%Y-%m-%d'), '%d/%m/%Y') AS vencimento 
+            'R$ ' || REPLACE(TO_CHAR(pagamentos.valor, 'FM9999990.00'), '.', ',') AS valor,
+            TO_CHAR(TO_DATE(pagamentos.ultimoPagamento, 'YYYY-MM-DD'), 'DD/MM/YYYY') AS ultimoPagamento,
+            TO_CHAR(TO_DATE(clients.vencimento, 'YYYY-MM-DD'), 'DD/MM/YYYY') AS vencimento 
      FROM pagamentos 
      LEFT JOIN clients ON pagamentos.id_client = clients.id`, 
     res

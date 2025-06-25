@@ -5,7 +5,13 @@ const express = require("express");
 const router = express.Router();
 
 router.get("/clients", (req, res) => {
-  execSQLQuery(`  SELECT id, nome, altura, peso, idade, DATE_FORMAT(STR_TO_DATE(nascimento, '%d/%m/%Y'), '%d-%m-%Y') as nascimento, DATE_FORMAT(STR_TO_DATE(ultimoPagamento, '%Y-%m-%d'), '%d-%m-%Y') as ultimoPagamento FROM clients where ativo is null or ativo = 'S'`, res);
+  execSQLQuery(
+    `SELECT id, nome, altura, peso, idade, 
+      TO_CHAR(TO_DATE(nascimento, 'DD/MM/YYYY'), 'DD-MM-YYYY') as nascimento
+     FROM clients 
+     WHERE ativo is null or ativo = 'S'`,
+    res
+  );
 });
 
 router.post("/clients", (req, res) => {
@@ -28,10 +34,8 @@ router.put("/clients/:id?", (req, res) => {
     clientData: { nome, idade, peso, altura, nascimento },
   } = req.body;
 
-  console.log( `UPDATE clients SET nome ="${nome}", idade=${idade}, altura=${altura}, peso=${peso}, nascimento="${nascimento}" WHERE id = ${id}`)
-
   execSQLQuery(
-    `UPDATE clients SET nome ="${nome}", idade=${idade}, altura=${altura}, peso=${peso}, nascimento="${nascimento}" WHERE id = ${id}`,
+    `UPDATE clients SET nome ='${nome}', idade=${idade}, altura=${altura}, peso=${peso}, nascimento='${nascimento}' WHERE id = ${id}`,
     res
   );
 });
@@ -42,5 +46,16 @@ router.delete("/clients/:id?", (req, res) => {
   execSQLQuery(`UPDATE clients SET ativo="${flag}" WHERE ID = ${id}`, res);
 });
 
+router.put("/clients/:id?", (req, res) => {
+  const id = parseInt(req.params.id);
+  const {
+    clientData: { nome, idade, peso, altura, nascimento },
+  } = req.body;
+
+  execSQLQuery(
+    `UPDATE clients SET nome = '${nome}', idade = ${idade}, altura = ${altura}, peso = ${peso}, nascimento = '${nascimento}' WHERE id = ${id}`,
+    res
+  );
+});
 
 module.exports = router;

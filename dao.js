@@ -1,15 +1,11 @@
-const mysql = require("mysql2");
+const { Pool } = require('pg');
 const createTables = require("./create-table");
-const pool = mysql.createPool({
-  host: "localhost",
-  port: 3306,
-  user: "root",
-  password: "",
-  database: "academia",
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-  multipleStatements: true,
+const pool = new Pool({
+        user: 'postgres',
+        host: 'localhost',
+        database: 'academia_db',
+        password: process.env.DB_PASSWORD,
+        port: 5432, 
 });
 
 function execSQLQuery(sqlQry, res) {
@@ -27,7 +23,15 @@ function execSQLQuery(sqlQry, res) {
     console.log(error)
   }
 }
-createTables.createTableClients(pool);
-createTables.createTablePagamentos(pool);
+createTables.createTableClients(pool).then(() => {
+  console.log("Tabela clients criada com sucesso!");
+  createTables.createTablePagamentos(pool).then(() => {
+    console.log("Tabela pagamentos criada com sucesso!");
+  }).catch((error) => {
+    console.error("Erro ao criar tabela pagamentos:", error);
+  });
+}).catch((error) => {
+  console.error("Erro ao criar tabela clients:", error);
+});
 
 module.exports = execSQLQuery;
