@@ -12,7 +12,7 @@ server.use(bodyParser.urlencoded({ extended: true }));
 server.use(express.json())
 
 const corsOptions = {
-  origin: "*", // Altere para o domínio do seu frontend
+  origin: "https://front-academia-augusto.vercel.app", // Altere para o domínio do seu frontend
 };
 
 server.use(cors(corsOptions));
